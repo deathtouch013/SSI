@@ -1,6 +1,7 @@
 #https://www.rfc-editor.org/rfc/rfc6238.html#appendix-A
 import hmac
 import hashlib
+import time
 
 #se hara modulo con el valor correspondiente y marcara cuantos digitos se devuelven
 DIGITOS_MAXIMOS = [10,100,1000,10000,100000,1000000,1000000,10000000,100000000,1000000000,10000000000]
@@ -45,18 +46,15 @@ def listConcatBin(lista):
 #returnDigits es el numero de digitos que devuelve el codigo en base 10
 #cryto es el algoritmo de hash con el que se "cifra" (string) ["HmacSHA1","HmacSHA256","HmacSHA512"]
 def generateTOTP(key, counter, returnDigits, crypto):
-    #TODO pasar returnDigits a int
     maxDigitos = int(returnDigits)
 
-    #TODO asegurar que time tiene 16 caracteres, sino se añade 0
     while len(counter) < 16:
-        time = "0" + time
-    #TODO pasar key y time a hexadecimal
+        counter = "0" + counter
+
 
     msgBin = bytes.fromhex(counter)
     kBin = bytes.fromhex(key)
 
-    #hash = hmac_sha(crypto,k,msg)
     hash_hmac = hmac.new(kBin,msgBin,ALGORITMOS_HASH.get(crypto))
     hash = hex(int(hash_hmac.hexdigest(),16))
 
@@ -75,14 +73,18 @@ def generateTOTP(key, counter, returnDigits, crypto):
 
     otp = binary % DIGITOS_MAXIMOS[maxDigitos]
 
-    #TODO pasar otp a string
     result = str(otp)
 
-    #TODO asegurarse de que string tiene el numero de caracteres adecuado
     while len(result) < maxDigitos:
         result = "0" + result
 
     return result
+
+now = int(time.time())
+counter = int(now/30)
+
+TOTP = generateTOTP("3132333435363738393031323334353637383930", str(counter), "8", "SHA1")
+print(TOTP)
 
 TOTP = generateTOTP("3132333435363738393031323334353637383930", "0000000000000001", "8", "SHA1")
 print(TOTP)
