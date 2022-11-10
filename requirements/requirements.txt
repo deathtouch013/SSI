@@ -1,0 +1,6 @@
+Django>=3.0,<4.0
+psycopg2>=2.8
+spotipy>=2.19.0
+pandas>=1.4.1
+django-crispy-forms
+Pillow

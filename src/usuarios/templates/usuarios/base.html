@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-es">
+
+  <head>
+    <title>Practica PI - Login</title>
+    <meta name="description" content="Practica final PI">
+    <meta name="author" content="Hadrian, Miguel  & David">
+
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'web_files/favicon.ico' %}">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+
+  <body>
+
+    <!-- BANNER -->
+    <picture>
+      <source media="(min-width: 1200px)" srcset="{% static 'web_files/banner.png' %}" class="banner">
+      <img src="{% static 'web_files/banner.png' %}" class="banner" alt="">
+    </picture>
+
+    <!-- LOGOS & LOGIN/REGISTRO -->
+    <div class="row">
+      <!-- LOGOS -->
+      <div class="logos">
+       <img src="{% static 'web_files/logo_spotify.jpg' %}" alt="" class="logo">
+       <img src="{% static 'web_files/logo_twitter.png' %}" alt="" class="logo">
+       <img src="{% static 'web_files/logo_google_calendar.png' %}" alt="" class="logo">
+      </div>
+      <!-- SEPARATOR -->
+      <div class="vl"></div>
+
+      {% if request.user.is_authenticated %}
+
+      <div class="myform">
+
+        <form action="log_out">
+          <fieldset>
+            <legend>Ya estas logeado:</legend>
+              <input type="submit" class="formbutton" value="Cerrar sesion">
+          </fieldset>
+        </form>
+    
+        <form action="/conciertos/userinfo">
+          <fieldset>
+            <legend>Volver a conciertos:</legend>
+            <input type="submit" class="formbutton" value="Ir a conciertos">
+          </fieldset>
+        </form>
+      </div>
+  
+      {% else %}
+
+        {% block content %}{% endblock %}
+
+      {%endif%}
+
+    </div>
+
+  </body>
+
+</html>

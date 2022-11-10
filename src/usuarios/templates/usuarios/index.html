@@ -1,0 +1,36 @@
+{% extends "usuarios/base.html" %} {%block content%}
+<!-- LOGIN -->
+<div class="myform">
+
+  <form action="" method="POST">
+    <fieldset>
+      <legend>Inicia sesión:</legend>
+
+      {% if messages %}
+        {% for message in messages%}  
+          <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <strong>{{ message }}</strong>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      {% csrf_token %}
+
+      {% load crispy_forms_tags %} {% crispy login_form login_form.helper %}
+
+    </fieldset>
+  </form>
+  <!-- REGISTRO -->
+  <div class="myform">
+    <form action="register">
+      <fieldset>
+        <legend>Regístrate:</legend>
+        <input type="submit" class="formbutton" value="Registrarse">
+      </fieldset>
+    </form>
+  </div>
+
+</div>
+{% endblock %}
+
+

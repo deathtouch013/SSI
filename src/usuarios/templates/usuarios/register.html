@@ -1,0 +1,25 @@
+{% extends "usuarios/base.html" %} {%block content%}
+<!-- Register FORM -->
+<div class="myform">
+  <form action="" method="POST">
+    <fieldset>
+      <legend>Registrar:</legend>
+      {% csrf_token %}
+
+      {% load crispy_forms_tags %} {% crispy register_form register_form.helper %}
+
+      <!--
+      <label for="username">Usuario:</label><br>
+      <input type="text" id="username" name="username" required><br>
+      <label for="password">Contraseña:</label><br>
+      <input type="password" id="password" name="password" required><br>
+      <label for="confirm_password">Confirmar contraseña:</label><br>
+      <input type="password" id="confirm_password" name="confirm_password" required><br>
+      </select><br><br>
+      <input type="submit" class="formbutton" value="Registrar" onclick="check_register(username, password, confirm_password)">
+      -->
+
+    </fieldset>
+  </form>
+</div>
+{% endblock %}

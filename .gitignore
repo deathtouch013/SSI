@@ -1,0 +1,4 @@
+src/usuarios/__pycache__
+src/spotipy/__pycache__
+src/conciertos/__pycache__
+.cache
