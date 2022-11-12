@@ -2,5 +2,6 @@
 Integrantes:
 ------------
   * Miguel Oliveira Carballo m.oliveirac@udc.es
-  * Hadrián Peleteiro Rey hadrian.prey@udc.es
-  * David Zambrana Seoane david.zambrana@udc.es
+  * Ivan Cillero Seijas ivan.cillero@udc.es
+  * Andres Abal Aldao andres.abal@udc.es
+  * Marcos Vázquez Campos marcos.vazquez3@udc.es
