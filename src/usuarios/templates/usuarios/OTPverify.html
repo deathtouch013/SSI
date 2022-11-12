@@ -1,0 +1,8 @@
+<div class="OTPform">
+    <form action="/usuario/OTP_verify/" method="post">
+        {% csrf_token %}
+        <label for="OTPcode">Introduce el valor OTP: </label>
+        <input id="OTPcode" type="number" name="OTPvalue" min="0">
+        <input type="submit" value="OK">
+    </form>
+</div>

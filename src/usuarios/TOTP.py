@@ -2,6 +2,7 @@
 import hmac
 import hashlib
 import time
+import base64
 
 #se hara modulo con el valor correspondiente y marcara cuantos digitos se devuelven
 DIGITOS_MAXIMOS = [10,100,1000,10000,100000,1000000,1000000,10000000,100000000,1000000000,10000000000]
@@ -54,14 +55,25 @@ def generateTOTP(key, counter, returnDigits, crypto):
     msgBin = bytes.fromhex(counter)
     kBin = bytes.fromhex(key)
 
-    hash_hmac = hmac.new(kBin,msgBin,ALGORITMOS_HASH.get(crypto))
+    #kBin = b"123123123djwkdhawjdk"
+
+    hash_hmac = hmac.new(kBin,msgBin,hashlib.sha1)
     hash = hash_hmac.hexdigest()
 
-    hashbin = listHexToBin(hexListing(hash))
+    print(kBin)
+    print(msgBin)
+    print(base64.b32encode(kBin))
+    print(hash)
 
+
+
+    hashbin = listHexToBin(hexListing(hash))
+    #hashbin = hexListing(hash[2:])
 
     offset = int(hashbin[len(hashbin)-1],2) & 0xf
+    print(offset)
 
+    print(hexListing(hash))
     binary = (int(hashbin[offset],2) & 0x7f) << 24
     offset = offset + 1
     binary = binary | (int(hashbin[offset],2) & 0xff) << 16
@@ -82,12 +94,13 @@ def generateTOTP(key, counter, returnDigits, crypto):
 now = int(time.time())
 counter = int(now/30)
 
-TOTP = generateTOTP("3132333435363738393031323334353637383930", str(counter), "8", "SHA1")
+#clave: GEZDGMJSGMYTEM3ENJ3WWZDIMF3WUZDL
+TOTP = generateTOTP("313233313233313233646A776B646861776A646B", format(counter, 'x').upper(), "6", "SHA1")
 print(TOTP)
 
-TOTP = generateTOTP("3132333435363738393031323334353637383930", "0000000000000001", "8", "SHA1")
-print(TOTP)
-TOTP = generateTOTP("3132333435363738393031323334353637383930313233343536373839303132", "0000000000000001", "8", "SHA256")
-print(TOTP)
-TOTP = generateTOTP("31323334353637383930313233343536373839303132333435363738393031323334353637383930313233343536373839303132333435363738393031323334", "0000000000000001", "8", "SHA512")
-print(TOTP)
+#TOTP = generateTOTP("3132333435363738393031323334353637383930", "0000000000000001", "8", "SHA1")
+#print(TOTP)
+#TOTP = generateTOTP("3132333435363738393031323334353637383930313233343536373839303132", "0000000000000001", "8", "SHA256")
+#print(TOTP)
+#TOTP = generateTOTP("31323334353637383930313233343536373839303132333435363738393031323334353637383930313233343536373839303132333435363738393031323334", str(counter), "6", "SHA512")
+#print(TOTP)

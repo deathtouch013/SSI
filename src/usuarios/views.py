@@ -7,6 +7,8 @@ from numpy import require
 from usuarios.forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+#from models import Usuario
+import TOTP
 
 
 from usuarios.models import Usuario
@@ -49,3 +51,13 @@ def register(request):
 def log_out(request):
     logout(request)
     return redirect('/usuario/')
+
+def introducir_token(request):
+
+    if request.user.is_authenticated == False:
+        redirect('/usuario')
+    if request.method == 'POST':
+        TOTP.generateTOTP()
+        print(request.POST['OTPvalue'])
+
+    return render(request, 'usuarios/OTPverify.html')
