@@ -82,7 +82,7 @@ def generateTOTP(key, counter, returnDigits, crypto):
 now = int(time.time())
 counter = int(now/30)
 
-TOTP = generateTOTP("3132333435363738393031323334353637383930", str(counter), "8", "SHA1")
+TOTP = generateTOTP("313233313233313233646A776B646861776A646B", format(counter, 'x').upper(), "8", "SHA1")
 print(TOTP)
 
 TOTP = generateTOTP("3132333435363738393031323334353637383930", "0000000000000001", "8", "SHA1")
