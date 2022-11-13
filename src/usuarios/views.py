@@ -1,4 +1,7 @@
 import imp
+import qrcode
+import random
+import base64
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
@@ -79,5 +82,18 @@ def introducir_token(request):
 
     return render(request, 'usuarios/OTPverify.html', context)
 
-def verified(reques):
+def verified(request):
     return HttpResponse("Tas logeao manin")
+
+def createTOTPPasswd(request):
+
+    key = random.randbytes(20)
+    token = base64.b32encode(key)
+
+    #UserTOTP.
+
+    qr_string = "otpauth://totp/WebExampleTOTP?secret=" + token.decode("utf-8") +"&algorithm=SHA1&digits=6&period=30"
+
+    context = {'html_img':qr_string}
+
+    return render(request, 'usuarios/OTPgen.html', context)
