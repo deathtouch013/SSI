@@ -7,11 +7,8 @@ from numpy import require
 from usuarios.forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-#from models import Usuario
+from usuarios.models import UserTOTP
 import TOTP
-
-
-from usuarios.models import Usuario
 
 # Create your views here.
 def index(request):
@@ -21,7 +18,7 @@ def index(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('/conciertos/log_in')
+            return redirect('/usuarios/OTP_verify')
         else:
             messages.success(request, 'Credenciales incorrectas')
             return redirect('./')
@@ -54,10 +51,33 @@ def log_out(request):
 
 def introducir_token(request):
 
+    context = {}
+
     if request.user.is_authenticated == False:
         redirect('/usuario')
+
     if request.method == 'POST':
-        TOTP.generateTOTP()
+        
+        try:
+            TOTPhash = UserTOTP.objects.get(user=request.user).user_hash_id
+        except:
+            context = {'error_message': 'Algo fue mal, contacta con el administrador'}
+            return render(request, 'usuarios/OTPverify.html', context)
+
+        
+        code = TOTP.TOTPcodeFromUser(TOTPhash, "6")
+
+        print(code)
         print(request.POST['OTPvalue'])
 
-    return render(request, 'usuarios/OTPverify.html')
+        if (code != request.POST['OTPvalue']):
+            context = {'error_message': 'OTP code no valido. Quizás lo introdujiste demasiado tarde?'}
+            return render(request, 'usuarios/OTPverify.html', context)
+
+
+        return redirect('/usuario/success')
+
+    return render(request, 'usuarios/OTPverify.html', context)
+
+def verified(reques):
+    return HttpResponse("Tas logeao manin")

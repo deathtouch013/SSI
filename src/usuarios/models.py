@@ -1,9 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
-class Usuario(models.Model):
-    username = models.CharField(max_length=16, primary_key=True, null=False)
+class UserTOTP(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_hash_id = models.CharField(max_length=64, null=False)
     
     def __str__(self):
-        return self.username
+        return self.user_hash_id

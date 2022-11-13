@@ -1,4 +1,9 @@
 <div class="OTPform">
+    {% if error_message %}
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <strong>{{ error_message }}</strong>
+        </div>
+    {% endif %}
     <form action="/usuario/OTP_verify/" method="post">
         {% csrf_token %}
         <label for="OTPcode">Introduce el valor OTP: </label>

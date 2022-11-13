@@ -57,23 +57,14 @@ def generateTOTP(key, counter, returnDigits, crypto):
 
     #kBin = b"123123123djwkdhawjdk"
 
-    hash_hmac = hmac.new(kBin,msgBin,hashlib.sha1)
+    hash_hmac = hmac.new(kBin,msgBin,ALGORITMOS_HASH.get(crypto))
     hash = hash_hmac.hexdigest()
-
-    print(kBin)
-    print(msgBin)
-    print(base64.b32encode(kBin))
-    print(hash)
-
-
 
     hashbin = listHexToBin(hexListing(hash))
     #hashbin = hexListing(hash[2:])
 
     offset = int(hashbin[len(hashbin)-1],2) & 0xf
-    print(offset)
 
-    print(hexListing(hash))
     binary = (int(hashbin[offset],2) & 0x7f) << 24
     offset = offset + 1
     binary = binary | (int(hashbin[offset],2) & 0xff) << 16
@@ -91,12 +82,24 @@ def generateTOTP(key, counter, returnDigits, crypto):
 
     return result
 
-now = int(time.time())
-counter = int(now/30)
+def TOTPcodeFromUser(b32key, codeLength):
+
+    #obtenemos clave formato hexadecimal
+    hexkey = base64.b32decode(b32key).hex()
+
+    #obtenemos contador en funcion de hora actual
+    time_rn = int(time.time())
+    step = int(time_rn/30)
+    hex_step = format(step, 'x').upper()
+
+    return generateTOTP(hexkey, hex_step, codeLength, 'SHA1')
+
+#now = int(time.time())
+#counter = int(now/30)
 
 #clave: GEZDGMJSGMYTEM3ENJ3WWZDIMF3WUZDL
-TOTP = generateTOTP("313233313233313233646A776B646861776A646B", format(counter, 'x').upper(), "6", "SHA1")
-print(TOTP)
+#TOTP = generateTOTP("313233313233313233646A776B646861776A646B", format(counter, 'x').upper(), "6", "SHA1")
+#print(TOTP)
 
 #TOTP = generateTOTP("3132333435363738393031323334353637383930", "0000000000000001", "8", "SHA1")
 #print(TOTP)
