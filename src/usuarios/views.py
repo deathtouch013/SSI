@@ -10,6 +10,7 @@ from numpy import require
 from usuarios.forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from django.contrib.auth.models import User
 from usuarios.models import UserTOTP
 import TOTP
 
@@ -34,13 +35,19 @@ def register(request):
     context = {}
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
-        if form.is_valid():
+        if form.is_valid() & (not User.objects.filter(username=request.POST['username']).exists()):
             form.save()
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password1')
             user = authenticate(username = username, password = password)
             login(request, user)
-            return redirect('/conciertos/log_in')
+            return redirect('./OTP_generator')
+        elif (User.objects.filter(username=request.POST['username']).exists()):
+            messages.success(request, 'Usuario ya registrado')
+            return redirect('./register')
+        else:
+            messages.success(request, 'Contraseñas incorrectas')
+            return redirect('./register')
 
     else:
         register_form=RegisterForm()
@@ -88,11 +95,13 @@ def verified(request):
 def createTOTPPasswd(request):
 
     key = random.randbytes(20)
-    token = base64.b32encode(key)
+    token = base64.b32encode(key).decode("utf-8")
 
     #UserTOTP.
+    #TOTPhash = UserTOTP.objects.get(user=request.user).user_hash_id
+    UserTOTP.objects.create(user=request.user, user_hash_id=token)
 
-    qr_string = "otpauth://totp/WebExampleTOTP?secret=" + token.decode("utf-8") +"&algorithm=SHA1&digits=6&period=30"
+    qr_string = "otpauth://totp/WebExampleTOTP?secret=" + token +"&algorithm=SHA1&digits=6&period=30"
 
     context = {'html_img':qr_string}
 

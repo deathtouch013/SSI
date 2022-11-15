@@ -4,6 +4,14 @@
   <form action="" method="POST">
     <fieldset>
       <legend>Registrar:</legend>
+      {% if messages %}
+        {% for message in messages%}  
+          <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <strong>{{ message }}</strong>
+          </div>
+        {% endfor %}
+      {% endif %}
+
       {% csrf_token %}
 
       {% load crispy_forms_tags %} {% crispy register_form register_form.helper %}
@@ -21,5 +29,15 @@
 
     </fieldset>
   </form>
+
+  <div class="myform">
+    <form action="/">
+      <fieldset>
+        <legend>Iniciar Sesión:</legend>
+        <input type="submit" class="formbutton" value="Iniciar sesión">
+      </fieldset>
+    </form>
+  </div>
+
 </div>
 {% endblock %}
