@@ -33,7 +33,7 @@ class TOTP:
         return lista
 
     #key es el codigo en hexadecimal(se pasa en string)
-    #time es el tiempo en hexadecimal(se pasa en string)
+    #time es el tiempo en hexadecimal(se pasa en string) y en mayusculas, para parsearlo se puede usar format(counter, 'x').upper()
     #returnDigits es el numero de digitos que devuelve el codigo en base 10 (se pasa en int)
     #cryto es el algoritmo de hash con el que se "cifra" (string) ["HMACSHA1","HMACSHA256","HMACSHA512"]
     def generateTOTPFull(self,key, counter, returnDigits, crypto):
@@ -77,34 +77,45 @@ class TOTP:
 
         return result
 
+    #genera el codigo del tiempo actual, pero hay que pasarle el resto de parametros
     def generateTOTPNow(self,key, returnDigits, crypto):
         now = int(time.time())
         counter = int(now/30)
         return self.generateTOTPFull(key, format(counter, 'x').upper(), returnDigits, crypto)
 
     def test(self):
+        #claves usadas por la RFC
         key1 = "3132333435363738393031323334353637383930"
         key256 = "3132333435363738393031323334353637383930313233343536373839303132"
         key512 = "3132333435363738393031323334353637383930313233343536373839303132" + \
             "3334353637383930313233343536373839303132333435363738393031323334"
-
+        #contadores usados por la RFC
         counter = ["0000000000000001","00000000023523EC","00000000023523ED","000000000273EF07","0000000003F940AA","0000000027BC86AA"]
         algoritmo = ["HMACSHA1","HMACSHA256","HMACSHA512"]
+        #codigos resultantes para cada contador, puestos en listas de 3 elementos haciendo referencia a que algoritmo fue usado ["HMACSHA1","HMACSHA256","HMACSHA512"]
         codigos = [["94287082","46119246","90693936"],["07081804","68084774","25091201"],["14050471","67062674","99943326"],["89005924","91819424",\
             "93441116"],["69279037","90698825","38618901"],["65353130","77737706","47863826"]]
+
         cnt = 0
+        #si uno falla se muestra que codigo mostró y cual deberia mostrar
         while cnt < len(counter):
             codigo = totp.generateTOTPFull(key1, counter[cnt], 8, algoritmo[0])
             if codigo != codigos[cnt][0]:
                 print("El codigo generado fue: \"" + codigo + "\" pero deberia ser: \"" + codigos[cnt][0] + "\"")
+                print("key: " + key1)
+                print("Counter: " + counter[cnt] + " Algoritmo: " + algoritmo[0])
                 exit()
             codigo = totp.generateTOTPFull(key256, counter[cnt], 8, algoritmo[1])
             if codigo != codigos[cnt][1]:
                 print("El codigo generado fue: \"" + codigo + "\" pero deberia ser: \"" + codigos[cnt][0] + "\"")
+                print("key: " + key256)
+                print("Counter: " + counter[cnt] + " Algoritmo: " + algoritmo[1])
                 exit()
             codigo = totp.generateTOTPFull(key512, counter[cnt], 8, algoritmo[2])
             if codigo != codigos[cnt][2]:
                 print("El codigo generado fue: \"" + codigo + "\" pero deberia ser: \"" + codigos[cnt][0] + "\"")
+                print("key: " + key512)
+                print("Counter: " + counter[cnt] + " Algoritmo: " + algoritmo[2])
                 exit()
             cnt = cnt + 1
 
