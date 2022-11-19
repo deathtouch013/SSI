@@ -1,4 +1,4 @@
-# classroom_PI
+# Trabajo Tutelado SSI
 Integrantes:
 ------------
   * Miguel Oliveira Carballo m.oliveirac@udc.es
