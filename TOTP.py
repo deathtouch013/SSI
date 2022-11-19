@@ -5,17 +5,11 @@ import time
 
 #se hara modulo con el valor correspondiente y marcara cuantos digitos se devuelven
 DIGITOS_MAXIMOS = [10,100,1000,10000,100000,1000000,1000000,10000000,100000000,1000000000,10000000000]
-ALGORITMOS_HASH = {'SHA1': hashlib.sha1,'SHA256':hashlib.sha256,'SHA512':hashlib.sha512}
+ALGORITMOS_HASH = {'HMACSHA1': hashlib.sha1,'HMACSHA256':hashlib.sha256,'HMACSHA512':hashlib.sha512}
 
 def hmac_sha(algoritmo,keyBites,text):
     return hmac.new(keyBites,text,ALGORITMOS_HASH.get(algoritmo))
 
-
-def stringToHex(string):
-    hexadecimal = []
-    for i in string:
-        hexadecimal.append(format(ord(i), "x"))
-    return hexadecimal
     
 def listHexToBin(hexa):
     binario = []
@@ -34,47 +28,50 @@ def hexListing(hexa):
         cnt = cnt + 2
     return lista
 
-def listConcatBin(lista):
-    string = ""
-    for i in lista:
-        string = string + i
-    return string
+
 
 
 #key es el codigo en hexadecimal(se pasa en string)
 #time es el tiempo en hexadecimal(se pasa en string)
-#returnDigits es el numero de digitos que devuelve el codigo en base 10
-#cryto es el algoritmo de hash con el que se "cifra" (string) ["HmacSHA1","HmacSHA256","HmacSHA512"]
+#returnDigits es el numero de digitos que devuelve el codigo en base 10 (se pasa en int)
+#cryto es el algoritmo de hash con el que se "cifra" (string) ["HMACSHA1","HMACSHA256","HMACSHA512"]
 def generateTOTP(key, counter, returnDigits, crypto):
-    maxDigitos = int(returnDigits)
-
+    #El counter tiene un tamaño maximo de 16 porque nos permite guardar valores
+    #de tiempo usando 64 bits.
     while len(counter) < 16:
         counter = "0" + counter
 
+    #pasamos a binario counter y key para cifrarlo con el algoritmo seleccionado
     msgBin = bytes.fromhex(counter)
     kBin = bytes.fromhex(key)
-
     hash_hmac = hmac.new(kBin,msgBin,ALGORITMOS_HASH.get(crypto))
-    hash = hash_hmac.hexdigest()
 
+    #en hash lo guardamos en hexadecimal
+    hash = hash_hmac.hexdigest()
+    #y en hashbin pasamos los valores hexadecimales de dos en dos a una lista
+    #(de byte en byte) y despues esa lista la convertimos a una lista de bits
+    #(tambien de byte en byte)
     hashbin = listHexToBin(hexListing(hash))
 
-
+    #se obtiene el offset de los ultimos cuatro bits del hash
     offset = int(hashbin[len(hashbin)-1],2) & 0xf
 
-    binary = (int(hashbin[offset],2) & 0x7f) << 24
-    offset = offset + 1
-    binary = binary | (int(hashbin[offset],2) & 0xff) << 16
-    offset = offset + 1
-    binary = binary | (int(hashbin[offset],2) & 0xff) << 8
-    offset = offset + 1
-    binary = binary | (int(hashbin[offset],2) & 0xff)
+    #Cogemos los cuatro bytes apartir de el offset (se ignora el ultimo bit del
+    #primero, 0x7f, porque se trata con un unsigned de 31 bits segun la RFC de
+    #HOTP) y formamos un int.
+    binary = (int(hashbin[offset],2) & 0x7f) << 24 \
+        | (int(hashbin[offset + 1],2) & 0xff) << 16 \
+        | (int(hashbin[offset + 2],2) & 0xff) << 8 \
+        | (int(hashbin[offset + 3],2) & 0xff)
 
-    otp = binary % DIGITOS_MAXIMOS[maxDigitos]
+    #se cogen las cifras que se nos piden del entero generado
+    otp = binary % DIGITOS_MAXIMOS[returnDigits]
 
+    #lo pasamos a un string para poder añadirle ceros a la izquierda para
+    #rellenar y que sea del tamaño que nos piden si el numero resultante es
+    #menor
     result = str(otp)
-
-    while len(result) < maxDigitos:
+    while len(result) < returnDigits:
         result = "0" + result
 
     return result
@@ -82,12 +79,17 @@ def generateTOTP(key, counter, returnDigits, crypto):
 now = int(time.time())
 counter = int(now/30)
 
-TOTP = generateTOTP("313233313233313233646A776B646861776A646B", format(counter, 'x').upper(), "8", "SHA1")
+TOTP = generateTOTP("313233313233313233646A776B646861776A646B",\
+        format(counter, 'x').upper(), 6, "HMACSHA1")
 print(TOTP)
 
-TOTP = generateTOTP("3132333435363738393031323334353637383930", "0000000000000001", "8", "SHA1")
+TOTP = generateTOTP("3132333435363738393031323334353637383930",\
+        "0000000000000001", 8, "HMACSHA1")
 print(TOTP)
-TOTP = generateTOTP("3132333435363738393031323334353637383930313233343536373839303132", "0000000000000001", "8", "SHA256")
+TOTP = generateTOTP("31323334353637383930313233343536373839303" +\
+        "13233343536373839303132", "0000000000000001", 8, "HMACSHA256")
 print(TOTP)
-TOTP = generateTOTP("31323334353637383930313233343536373839303132333435363738393031323334353637383930313233343536373839303132333435363738393031323334", "0000000000000001", "8", "SHA512")
+TOTP = generateTOTP("313233343536373839303132333435363738393031323334353637" +\
+        "383930313233343536373839303132333435363738393031323334353637383930313" +\
+        "23334", "0000000000000001", 8, "HMACSHA512")
 print(TOTP)
