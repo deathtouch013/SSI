@@ -22,7 +22,7 @@ def index(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('/usuarios/OTP_verify')
+            return redirect('/usuario/OTP_verify')
         else:
             messages.success(request, 'Credenciales incorrectas')
             return redirect('./')
@@ -90,16 +90,19 @@ def introducir_token(request):
     return render(request, 'usuarios/OTPverify.html', context)
 
 def verified(request):
-    return HttpResponse("Tas logeao manin")
+    return redirect('/usuario')
 
 def createTOTPPasswd(request):
 
-    key = random.randbytes(20)
-    token = base64.b32encode(key).decode("utf-8")
+    try:
+        token=UserTOTP.objects.get(user=request.user).user_hash_id
+    except:
+        key = random.randbytes(20)
+        token = base64.b32encode(key).decode("utf-8")
 
-    #UserTOTP.
-    #TOTPhash = UserTOTP.objects.get(user=request.user).user_hash_id
-    UserTOTP.objects.create(user=request.user, user_hash_id=token)
+        #UserTOTP.
+        #TOTPhash = UserTOTP.objects.get(user=request.user).user_hash_id
+        UserTOTP.objects.create(user=request.user, user_hash_id=token)
 
     qr_string = "otpauth://totp/WebExampleTOTP?secret=" + token +"&algorithm=SHA1&digits=6&period=30"
 

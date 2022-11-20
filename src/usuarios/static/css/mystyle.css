@@ -28,10 +28,17 @@ input{
 }
 
 img{
-  width: 40%;
+  width: 30%;
   height: 40%;
 }
 
+.claseprueba{
+  text-align: center;
+  align-items: center;
+}
+.claseprueba p{
+  text-align: center;
+}
 canvas{
   width: 30%;
   height: 30%;
@@ -203,6 +210,14 @@ p{
 @media (max-width: 1200px) {
 
   h2{
+    text-align: center;
+  }
+
+  .claseprueba{
+    text-align: center;
+    align-items: center;
+  }
+  .claseprueba p{
     text-align: center;
   }
 

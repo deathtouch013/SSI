@@ -4,8 +4,8 @@
 
   <head>
     <title>Practica PI - Login</title>
-    <meta name="description" content="Practica final PI">
-    <meta name="author" content="Hadrian, Miguel  & David">
+    <meta name="description" content="TTSSI">
+    <meta name="author" content="TTSSI">
 
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
@@ -24,14 +24,6 @@
 
     <!-- LOGOS & LOGIN/REGISTRO -->
     <div class="row">
-      <!-- LOGOS -->
-      <div class="logos">
-       <img src="{% static 'web_files/logo_spotify.jpg' %}" alt="" class="logo">
-       <img src="{% static 'web_files/logo_twitter.png' %}" alt="" class="logo">
-       <img src="{% static 'web_files/logo_google_calendar.png' %}" alt="" class="logo">
-      </div>
-      <!-- SEPARATOR -->
-      <div class="vl"></div>
 
       {% if request.user.is_authenticated %}
 
@@ -41,13 +33,6 @@
           <fieldset>
             <legend>Ya estas logeado:</legend>
               <input type="submit" class="formbutton" value="Cerrar sesion">
-          </fieldset>
-        </form>
-    
-        <form action="/conciertos/userinfo">
-          <fieldset>
-            <legend>Volver a conciertos:</legend>
-            <input type="submit" class="formbutton" value="Ir a conciertos">
           </fieldset>
         </form>
       </div>

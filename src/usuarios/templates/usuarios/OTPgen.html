@@ -19,7 +19,18 @@
             <img src="{% static 'web_files/banner.png' %}" class="banner" alt="">
         </picture>
 
-        <p id="usuario">Escanea el siguiente qrcode. <b>¡No hacerlo te impedirá entrar en la página!</b></p>
-        <img id="barcode" src="https://api.qrserver.com/v1/create-qr-code/?data={{html_img}}" alt="" title="{{html_img}}" width="150" height="150"/>
-
+        <div class="claseprueba">
+            <p id="usuario">Escanea el siguiente qrcode. <b>¡No hacerlo te impedirá iniciar sesión la próxima vez!</b></p>
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data={{html_img}}" alt="" title="{{html_img}}" width="100" height="100"/>
+            <p id="usuario">{{html_img}}</p>
+        </div>
+        
+        <div class="myform">
+            <form action="..">
+                <fieldset>
+                    <legend>Continuar:</legend>
+                    <input type="submit" class="formbutton" value="Ir a la página">
+                </fieldset>
+            </form>
+        </div>
     </body>

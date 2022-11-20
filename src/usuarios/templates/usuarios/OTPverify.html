@@ -1,13 +1,39 @@
-<div class="OTPform">
-    {% if error_message %}
-        <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <strong>{{ error_message }}</strong>
+{% load static %}
+<!DOCTYPE html>
+<html lang="es-es">
+    <head>
+        <title>Practica PI - Login</title>
+        <meta name="description" content="Practica final PI">
+        <meta name="author" content="Hadrian, Miguel  & David">
+    
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'css/mystyle.css' %}">
+        <link rel="icon" type="image/x-icon" href="{% static 'web_files/favicon.ico' %}">
+        <meta name="keywords" content="HTML, CSS, JavaScript">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <!-- BANNER -->
+        <picture>
+            <source media="(min-width: 1200px)" srcset="{% static 'web_files/banner.png' %}" class="banner">
+            <img src="{% static 'web_files/banner.png' %}" class="banner" alt="">
+        </picture>
+        <div class="myform">
+            <form action="/usuario/OTP_verify/" method="post">
+                <fieldset>
+                    <legend>2FA</legend>
+                    {% if error_message %}
+                        <div class="alert alert-warning d-flex align-items-center" role="alert">
+                            <strong>{{ error_message }}</strong>
+                        </div>
+                    {% endif %}
+                    {% csrf_token %}
+                    <label for="OTPcode">Introduce el valor OTP: </label>
+                    <input id="OTPcode" type="number" name="OTPvalue" min="0" required>
+                    <div class="buttonHolder"> 
+                        <input type="submit" name="login" value="Comprobar" class="btn btn-primary formbutton" id="submit-id-login">
+                    </div>
+                </fieldset>
+            </form>
         </div>
-    {% endif %}
-    <form action="/usuario/OTP_verify/" method="post">
-        {% csrf_token %}
-        <label for="OTPcode">Introduce el valor OTP: </label>
-        <input id="OTPcode" type="number" name="OTPvalue" min="0">
-        <input type="submit" value="OK">
-    </form>
-</div>
+    </body>
