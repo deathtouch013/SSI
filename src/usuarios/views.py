@@ -12,7 +12,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from usuarios.models import UserTOTP
-import TOTP
+from TOTP import TOTP
 
 # Create your views here.
 def index(request):
