@@ -74,8 +74,7 @@ def introducir_token(request):
             context = {'error_message': 'Algo fue mal, contacta con el administrador'}
             return render(request, 'usuarios/OTPverify.html', context)
 
-        
-        code = TOTP.TOTPcodeFromUser(TOTPhash, "6")
+        code = TOTP().generateTOTPNowb32(TOTPhash, 6, "HMACSHA1")
 
         print(code)
         print(request.POST['OTPvalue'])

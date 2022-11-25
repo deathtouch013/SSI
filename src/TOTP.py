@@ -2,6 +2,7 @@
 import hmac
 import hashlib
 import time
+import base64
 
 class TOTP:
 
@@ -82,6 +83,12 @@ class TOTP:
         now = int(time.time())
         counter = int(now/30)
         return self.generateTOTPFull(key, format(counter, 'x').upper(), returnDigits, crypto)
+
+
+    def generateTOTPNowb32(self, key, returnDigits, crypto):
+
+        bkey = base64.b32decode(key).hex()
+        return self.generateTOTPNow(bkey, returnDigits, crypto)
 
     def test(self):
         #claves usadas por la RFC
