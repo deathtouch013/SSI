@@ -24,5 +24,7 @@ Si no fuese así, debería repasarse la instalación. De todas formas, puede int
   * Selecciona la opción "Reopen and Rebuild in a Container"
   * Se debería generar un container con una base de datos y una maquina virtual con python y las librerías necesarias para ejecutar el código.
   * Escribe en el terminal de la maquina virtual, desde el directorio src el siguiente código
-  > python manage.py runserver localhost:8080
+```
+python manage.py runserver localhost:8080
+```
 Especial enfasis en que el puerto sea 8080. De otra forma no funcionará.
